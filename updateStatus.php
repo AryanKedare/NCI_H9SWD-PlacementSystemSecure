@@ -1,15 +1,7 @@
 
 <?php
-$servername="localhost";
-		 $username="root";
-		 $password="password";
-		 $dbname="project";
-		 
-		 $conn = new mysqli($servername,$username,$password,$dbname);
-		 
-		 if($conn->connect_error){
-			 die("Connection failed: ".$conn->connect_error);
-		}
+	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+
 	if($_SERVER["REQUEST_METHOD"]=="POST"){
         $app_id = $_POST['app_id'];
 		$status = $_POST['status'];
@@ -18,8 +10,8 @@ $servername="localhost";
 		 
 	
 		 $usql="Update applications set status=".$status." where app_id=".$app_id."";		
-		 $uresult=$conn->query($usql);
-		 $conn->close();
+		 $uresult=pg_query($conn,$usql);
+		 pg_close($conn);
 		header('Location: company_dash.php');
 	
 	}

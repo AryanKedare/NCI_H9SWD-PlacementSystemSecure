@@ -118,20 +118,13 @@
 			  <br>
 			  <br>
 			  <?php
-			  session_start();
-				$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-					$conn = new mysqli($servername,$username,$password,$dbname);
-
-					if($conn->connect_error){
-						die("Connection failed: ".$conn->connect_error);
-					}
-					$sql="Select * from students where email=\"".$_SESSION['email']."\"";
-					$result = $conn->query($sql);
-					$row=$result->fetch_assoc();
+			  	session_start();
+			  $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+ 
+					$sql="SELECT * from students where email='".$_SESSION['email']."';";
+					//$sql="SELECT * from students where email='arykedare@gmail.com';";
+					$result = pg_query($conn,$sql);
+					$row=pg_fetch_assoc($result);
 					
                echo "<div class=\"table-responsive table-bordered\" >";            
 			   echo	"  <table class=\"table table-hover\">";
@@ -141,7 +134,7 @@
 				        </tr>
 				      <tr>
 					    <th>Email</th>
-				        <td>".$row['email']."</td>
+ 				        <td>".$row['email']."</td>
 
 				      </tr>
 					  <tr>
@@ -271,18 +264,10 @@
 				
 				<?php
 				
-					$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-					$conn = new mysqli($servername,$username,$password,$dbname);
+				$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-					if($conn->connect_error){
-						die("Connection failed: ".$conn->connect_error);
-					}
 					$sql="Select name,email from companys";
-					$result = $conn->query($sql);
+					$result = pg_query($conn,$sql);
 					
 					  echo "<div class=\"table-responsive table-bordered\" >            
 						  <table class=\"table table-hover\">
@@ -295,7 +280,7 @@
 							<tbody>
 							";
 								
-							while($row = $result->fetch_assoc()){
+							while($row=pg_fetch_assoc($result)){
 							  echo "<tr id=\"clist\" onclick=\"trclick('".$row['email']."','".$row['name']."',this)\">";
 							  echo "<td>".$row['name']. "</td>";
 							  echo "<td>".$row['email']."</td>";
@@ -323,7 +308,7 @@
 				  */
 				 
 				  
-						
+						pg_close($conn);
 				?>
 				
 		    </div>

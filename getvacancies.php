@@ -8,18 +8,10 @@
 <?php
 session_start();
 $name = $_GET['name'];
-$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-$conn = new mysqli($servername,$username,$password,$dbname);
-if (!$conn) {
-    die('Could not connect: ' . mysqli_error($conn));
-}
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-$sql="SELECT * FROM vacancy WHERE company_name = '".$name."'";
-$result = $conn->query($sql);
+$sql="SELECT * FROM vacancy WHERE company_name='".$_GET['name']."';";
+$result = pg_query($conn,$sql);
 
 
 
@@ -32,18 +24,18 @@ echo "<div class=\"table-responsive table-bordered\" >
 				   <th>Eligiblity</th>
 				   </tr>
 				   ";
-			while($row = $result->fetch_assoc()){	   
+			while($row = pg_fetch_assoc($result)){	   
 					echo		   "
 				   <tr>
 				   <td>".$row['job_title']."</td>
 				   <td>".$row['salary']."</td>
 				   <td>".$row['location']."</td>";
 				   
-				   $sql1="SELECT * FROM applications WHERE s_mail = '".$_SESSION['email']."' AND job_id=".$row['job_id']."";
-				   $result1 = $conn->query($sql1);
+				   $sql1="SELECT * FROM applications WHERE s_mail = '".$_SESSION['name']."' AND job_id=".$row['job_id']."";
+				   $result1 = pg_query($conn,$sql1);
 				   
-				   if($result1->num_rows != 0){
-				    $row1 = $result1->fetch_assoc();
+				   if(pg_num_rows($result1) != 0){
+				    $row1 = pg_fetch_assoc($result1);
 							if($row1['status'] == 0){
 								echo "<td>Status: Pending</td>";  
 							}elseif($row1['status'] == 1){

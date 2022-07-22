@@ -9,14 +9,11 @@
 
 $email = $_GET['email'];
 
-$con = mysqli_connect('localhost','root','password','project');
-if (!$con) {
-    die('Could not connect: ' . mysqli_error($con));
-}
+$con = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-$sql="SELECT * FROM companys WHERE email = '".$email."'";
-$result = mysqli_query($con,$sql);
-$row = mysqli_fetch_array($result);
+$sql="SELECT * FROM companys WHERE email='".$_GET['email']."';";
+$result = pg_query($con,$sql);
+$row = pg_fetch_array($result);
 
 
 echo "<img class=\"img-responsive \" src=\"CSS/Image/c1.jpg\" height=\"120px\" width=\"120px\" align=\"center\" style=\"border-radius:50%\"></img>
@@ -77,7 +74,7 @@ echo "<img class=\"img-responsive \" src=\"CSS/Image/c1.jpg\" height=\"120px\" w
 				</div>
 "	;			
 
-mysqli_close($con);
+	pg_close($con);
 ?>
 </body>
 </html>

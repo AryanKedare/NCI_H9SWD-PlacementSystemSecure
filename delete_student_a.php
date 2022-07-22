@@ -21,39 +21,32 @@
 		
 		 <?php
 			  session_start();
-				$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
+
 					
 					function phpAlert($msg) {
     echo '<script type="text/javascript">alert("' . $msg . '")</script>';
 }
 
-					// Create connection
-                   $conn = new mysqli($servername, $username, $password, $dbname);
-                 // Check connection
-                 if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                  } 
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+
 				  
 			if($_SERVER["REQUEST_METHOD"]=="POST"){
 					$uname = $_POST['uname'];
-					$sql1="SELECT * from students where email=\"" . $uname . "\"";
-					$result = $GLOBALS['conn']->query($sql1);
-					if($result->num_rows == 0){
+					$sql1="SELECT * from students where email='".$_POST['uname']."';";
+					$result = pg_query($GLOBALS['conn'],$sql1);
+					if(pg_num_rows($result) == 0){
 					    phpAlert(   "Wrong username entered!"   );
 						//header('Location: student_dash.php');
 
 					}else{
-					$row=$result->fetch_assoc();
+					$row=pg_fetch_assoc($result);
 						
-							$sql2="Delete from students where email='".$uname."'";
-							$result = $GLOBALS['conn']->query($sql2);
+							$sql2="Delete from students where email='".$_POST['uname']."';";
+							$result = pg_query($GLOBALS['conn'],$sql2);
 							//phpAlert("Deleted!");
 							//header('Location: index.html');
-							$sql3="Delete from applications where s_mail='".$uname."'";
-							$result3 = $GLOBALS['conn']->query($sql3);
+							$sql3="Delete from applications where s_mail='".$_POST['uname']."';";
+							$result3 = pg_query($GLOBALS['conn'],$sql3);
 							
 							echo "<SCRIPT type='text/javascript'> //not showing me this
 								alert('Deleted');
@@ -66,7 +59,7 @@
         //echo $pwd . "<BR>";
     
 				 
-           $conn->close();
+           pg_close($conn);
           ?>
 		
 	</head>

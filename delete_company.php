@@ -21,43 +21,33 @@
 		
 		 <?php
 			  session_start();
-				$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
 					
-					function phpAlert($msg) {
+			function phpAlert($msg) {
     echo '<script type="text/javascript">alert("' . $msg . '")</script>';
 }
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-					// Create connection
-                   $conn = new mysqli($servername, $username, $password, $dbname);
-                 // Check connection
-                 if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                  } 
-				  
 			if($_SERVER["REQUEST_METHOD"]=="POST"){
 					$uname = $_POST['uname'];
 					$pwd = $_POST['pwd'];
-					$sql1="SELECT pwd from companys where email=\"" . $uname . "\"";
-					$result = $GLOBALS['conn']->query($sql1);
-					if($result->num_rows == 0){
+					$sql1="SELECT pwd from companys where email='".$_POST['uname']."';";
+					$result = pg_query($GLOBALS['conn'],$sql1);
+					if(pg_num_rows($result) == 0){
 					    phpAlert(   "Wrong username entered!"   );
 						//header('Location: student_dash.php');
 
 					}else{
-					$row=$result->fetch_assoc();
+					$row=pg_fetch_assoc($result);
 						if($row['pwd']==$pwd){
-							$sql2="Delete from companys where email='".$uname."'";
-							$result = $GLOBALS['conn']->query($sql2);
+							$sql2="Delete from companys where email='".$_POST['uname']."';";
+							$result = pg_query($GLOBALS['conn'],$sql2);
 							//phpAlert("Deleted!");
 							//header('Location: index.html');
-							$sql3="Delete from applications where c_mail='".$uname."'";
-							$result3 = $GLOBALS['conn']->query($sql3);
+							$sql3="Delete from applications where c_mail='".$_POST['uname']."';";
+							$result3 = pg_query($GLOBALS['conn'],$sql3);
 							
-							$sql4="Delete from vacancy where company_name='".$_SESSION['name']."'";
-							$result4 = $GLOBALS['conn']->query($sql4);
+							$sql4="Delete from vacancy where company_name='".$_POST['name']."';";
+							$result4 = pg_query($GLOBALS['conn'],$sql4);
 							
 							echo "<SCRIPT type='text/javascript'> //not showing me this
 								alert('Deleted');
@@ -73,7 +63,7 @@
         //echo $pwd . "<BR>";
     
 				 
-           $conn->close();
+           pg_close($conn);
           ?>
 		
 	</head>

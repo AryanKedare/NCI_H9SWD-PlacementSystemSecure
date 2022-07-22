@@ -40,17 +40,8 @@
 
 			  <?php
 			  session_start();
-				$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-					// Create connection
-                   $conn = new mysqli($servername, $username, $password, $dbname);
-                 // Check connection
-                 if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                          }  
+			  $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+
 			 echo "<style>
                 table, th, td {
                    border: 2px solid black;
@@ -76,15 +67,15 @@
 				  if(isset($_POST['name']) && $_POST['name']=="TOTAL REGISTERED STUDENTS") {
                      
                	 $sql = "SELECT * FROM students";
-                $result = $conn->query($sql);
+                $result = pg_query($conn,$sql);
 				
                echo "<h4 align=\"center\">REGISTERED STUDENTS</h4>";
 			   echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\"><tr><th>Name</th><th>Email</th><th>Contact No.</th><th>D.O.B.</th><th>Degree</th><th>Branch</th><th>Year of Passing</th><th>C.P.I.</th><th>12th Percentage</th><th>10th Percentage</th></tr>";
      
-               while($row = $result->fetch_assoc()) {
-                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["dob"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["year"]."</td><td>".$row["cpi"]."</td><td>".$row["12p"]."</td><td>".$row["10p"]."</td></tr>";
+               while($row = pg_fetch_assoc($result)) {
+                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["dob"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["year"]."</td><td>".$row["cpi"]."</td><td>".$row["twp"]."</td><td>".$row["tenp"]."</td></tr>";
                     }
               echo "</table>";
          }  else {
@@ -95,14 +86,14 @@
 			  if(isset($_POST['name']) && $_POST['name']=="TOTAL VACANCIES") {
                      
                	 $sql = "SELECT * FROM vacancy";
-                $result = $conn->query($sql);
+                $result = pg_query($conn,$sql);
 				
                echo "<h4 align=\"center\">TOTAL VACANCIES</h4>";
 			   echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\"><tr><th>Company Name</th><th>Job Title</th><th>Salary</th><th>Location</th><th>Bond</th></tr>";
      
-               while($row = $result->fetch_assoc()) {
+               while($row = pg_fetch_assoc($result)) {
                 echo "<tr><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td><td> ".$row["bond"]."</td></tr>";
                     }
               echo "</table>";
@@ -115,12 +106,12 @@
 			if(isset($_POST['name']) && $_POST['name']=="TOTAL REGISTERED COMPANIES") {
                      
                	 $sql = "SELECT * FROM companys";
-                $result = $conn->query($sql);
+                $result = pg_query($conn,$sql);
 				echo "<h4 align=\"center\">REGISTERED COMPANIES</h4>";
 				echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Location</th><th>C.E.O.</th><th>C.T.O</th><th>H.R.</th><th>Worth</th><th>Founded in</th><th>Founder</th></tr>";
-                while($row = $result->fetch_assoc()) {
+                while($row = pg_fetch_assoc($result)) {
                 echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td> ".$row["phone"]."</td><td> ".$row["location"]."</td><td> ".$row["ceo"]."</td><td> ".$row["cto"]."</td><td> ".$row["hr"]."</td><td> ".$row["worth"]."</td><td> ".$row["found"]."</td><td> ".$row["founder"]."</td></tr>";
                     }
               echo "</table>";
@@ -131,16 +122,16 @@
 				  
 		 if(isset($_POST['name']) && $_POST['name']=="TOTAL PLACED STUDENTS") {
                      
-               	 $sql = "SELECT * FROM students as S,applications as A,vacancy as V where S.email=A.s_mail and A.job_id=V.job_id and A.status=1 ";
-                $result = $conn->query($sql);
+               	 $sql = "SELECT * FROM students as s,applications as a,vacancy as v where s.email=a.s_mail and a.job_id=v.job_id and a.status='1' ";
+                $result = pg_query($conn,$sql);
 				
                    echo "<h4 align=\"center\">PLACED STUDENTS</h4>";
 				   echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\"><tr><th>Name</th><th>Email</th><th>Contact No.</th><th>Degree</th><th>Branch</th><th>C.P.I.</th><th>12th Percentage</th><th>10th Percentage</th><th>Company</th><th>Job Title</th><th>Salary (LPA)</th><th>Location</th></tr>";
      
-               while($row = $result->fetch_assoc()) {
-                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["12p"]."</td><td>".$row["10p"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
+               while($row = pg_fetch_assoc($result)) {
+                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["twp"]."</td><td>".$row["tenp"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
                     }
               echo "</table>";
          }  else {
@@ -150,16 +141,16 @@
 				  
 		  if(isset($_POST['name']) && $_POST['name']=="STUDENTS PLACED IN BANGLORE") {
                      
-               	 $sql = "SELECT * FROM students as S,applications as A,vacancy as V where S.email=A.s_mail and A.job_id=V.job_id and A.status=1 and V.location='Banglore'";
-                $result = $conn->query($sql);
+               	 $sql = "SELECT * FROM students as S,applications as A,vacancy as V where S.email=A.s_mail and A.job_id=V.job_id and A.status='1' and V.location='Banglore'";
+                $result = pg_query($conn,$sql);
 				
                    echo "<h4 align=\"center\">STUDENTS PLACED IN BANGLORE</h4>";
 				   echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\"><tr><th>Name</th><th>Email</th><th>Contact No.</th><th>Degree</th><th>Branch</th><th>C.P.I.</th><th>12th Percentage</th><th>10th Percentage</th><th>Company</th><th>Job Title</th><th>Salary (LPA)</th><th>Location</th></tr>";
      
                while($row = $result->fetch_assoc()) {
-                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["12p"]."</td><td>".$row["10p"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
+                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["twp"]."</td><td>".$row["tenp"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
                     }
               echo "</table>";
          }  else {
@@ -169,23 +160,23 @@
 		
 				  if(isset($_POST['name']) && $_POST['name']=="STUDENTS PLACED AS DEVELOPERS") {
                      
-               	 $sql = "SELECT * FROM students as S,applications as A,vacancy as V where S.email=A.s_mail and A.job_id=V.job_id and A.status=1 and V.job_title='Developer'";
-                $result = $conn->query($sql);
+               	 $sql = "SELECT * FROM students as S,applications as A,vacancy as V where S.email=A.s_mail and A.job_id=V.job_id and A.status='1' and V.job_title='Developer'";
+                $result = pg_query($conn,$sql);
 				
                    echo "<h4 align=\"center\">STUDENTS PLACED AS DEVELOPERS</h4>";
 				   echo "<br>";
-             if ($result->num_rows > 0) {
+             if (pg_num_rows($result) > 0) {
                  echo "<table class=\"table table-hover\" ><tr><th>Name</th><th>Email</th><th>Contact No.</th><th>Degree</th><th>Branch</th><th>C.P.I.</th><th>12th Percentage</th><th>10th Percentage</th><th>Company</th><th>Job Title</th><th>Salary (LPA)</th><th>Location</th></tr>";
      
-               while($row = $result->fetch_assoc()) {
-                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["12p"]."</td><td>".$row["10p"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
+               while($row = pg_fetch_assoc($result)) {
+                echo "<tr><td>".$row["name"]."</td><td>".$row["email"]."</td><td>".$row["phone"]."</td><td>".$row["degree"]."</td><td> ".$row["branch"]."</td><td>".$row["cpi"]."</td><td>".$row["twp"]."</td><td>".$row["tenp"]."</td><td>".$row["company_name"]."</td><td>".$row["job_title"]."</td><td>".$row["salary"]."</td><td>".$row["location"]."</td></tr>";
                     }
               echo "</table>";
          }  else {
             echo "0 results";
                }
 				  }
-           $conn->close();
+           pg_close($conn);
           ?>
 
 

@@ -9,20 +9,11 @@
 	
 	$email= $_GET['email'];
 	
-	$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-	$conn = new mysqli($servername,$username,$password,$dbname);
-	
-	if (!$conn) {
-		die('Could not connect: ' . mysqli_error($conn));
-	}
+	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-	$sql1="SELECT * FROM students WHERE email = '".$email."'";
-	$result1 = $conn->query($sql1);
-	$row1 = $result1->fetch_assoc();
+	$sql1="SELECT * FROM students WHERE email = '".$_GET['email']."';";
+	$result1 = pg_query($conn,$sql1);
+	$row1 = pg_fetch_assoc($result1);
 
 	echo "<img class=\"img-responsive \" src=\"CSS/Image/c1.jpg\" height=\"120px\" width=\"120px\" align=\"center\" style=\"border-radius:50%\"></img>
 			  <div class=\"table-responsive table-bordered\" >            
@@ -58,11 +49,11 @@
 					  
 				      <tr>
 				        <th>12th Percentage</th>
-						<td>".$row1['12p']."</td>
+						<td>".$row1['twp']."</td>
 				        </tr>
 				      <tr>
 					    <th>10th Percentage</th>
-				        <td>".$row1['10p']."</td>
+				        <td>".$row1['tenp']."</td>
 
 				      </tr>
 					  <tr>

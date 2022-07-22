@@ -22,18 +22,7 @@
 	  
 	  <?php
 		session_start();
-		$servername="localhost";
-		$username="root";
-		$password="password";
-		$dbname="project";
-
-		$conn = new mysqli($servername,$username,$password,$dbname);
-
-		if($conn->connect_error){
-			die("Connection failed: ".$conn->connect_error);
-		}
-
-		
+		$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 		
 
 		if($_SERVER["REQUEST_METHOD"]=="POST"){
@@ -61,17 +50,17 @@
 			echo $phone. "<BR>";
 			echo $degree. "<BR>";*/
 			
-			$sql="INSERT into vacancy(company_name,job_title,salary,location,deadline,bond,age_e,degree_e,cpi_e,year_e,12p_e,10p_e) values(\"".$_SESSION['name']."\",\"".$job_title."\",".$salary.",\"".$location."\",\"".$deadline."\",".$bond.",".$age.",\"".$degree."\",".$cpi.",".$year.",".$twp.",".$tenp." );";
-			;
-			
-			if($conn->query($sql)===TRUE){
-			$GLOBALS['conn']->close();
+			$name=$_SESSION['name'];
+
+			$sql="INSERT into vacancy(company_name,job_title,salary,location,deadline,bond,age_e,degree_e,cpi_e,year_e,twtp_e,tetp_e) values('$name','$job_title',$salary,'$location','$deadline',$bond,$age,'$degree',$cpi,$year,$twp,$tenp);";
+			if(pg_query($conn,$sql)===TRUE){
+				pg_close($GLOBALS['conn']);
 		echo "<SCRIPT type='text/javascript'> //not showing me this
 								alert('Vacancy Created Succesfully!!');
 								window.location.replace(\"company_dash.php\");
 							</SCRIPT>";
 		}else{
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			echo "Error: " . $sql . "<br>" . pg_close($conn);
 		}
 			
 			/*
@@ -103,7 +92,7 @@
 		  
 		  
 	      <li><label for="deadline"><b>Deadline:</b></label>
-          <input type="date" placeholder=" " name="deadline"></li>
+          <input type="date" placeholder=" " name="deadline" required></li>
 	
           <li><label for="bond"><b>Bond:</b></label>
           <input type="number" placeholder=" " name="bond"></li>

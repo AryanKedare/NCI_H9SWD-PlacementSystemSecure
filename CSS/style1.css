@@ -77,10 +77,12 @@ body{
 
 #frm1{
 	background: #AED5F9;
-	/*margin-right:500px;
-	margin-left:500px;*/
+	margin-right:500px;
+	margin-left:750px;
    height:auto;
+   top: 800px;
    width: 300px;
+   
 }
 
 #main{

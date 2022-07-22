@@ -8,18 +8,10 @@
 <?php
 session_start();
 $job_id = $_GET['job_id'];
-$servername="localhost";
-					$username="root";
-					$password="password";
-					$dbname="project";
-					
-$conn = new mysqli($servername,$username,$password,$dbname);
-if (!$conn) {
-    die('Could not connect: ' . mysqli_error($conn));
-}
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-$sql="SELECT * FROM vacancy WHERE job_id = ".$job_id."";
-$result = $conn->query($sql);
+$sql="SELECT * FROM vacancy WHERE job_id = '".$_GET['job_id']."';";
+$result = pg_query($conn,$sql);
 
 
 
@@ -31,7 +23,7 @@ echo "<div class=\"table-responsive table-bordered\" >
 				   <th>Location</th>
 				   </tr>
 				   ";
-			while($row = $result->fetch_assoc()){	   
+			while($row = pg_fetch_assoc($result)){	   
 					echo		   "
 				   <tr>
 				   <td>".$row['job_title']."</td>

@@ -86,19 +86,10 @@
 					<br>
 					<?php
 						session_start();
-						$servername="localhost";
-						$username="root";
-						$password="password";
-						$dbname="project";
-						
-						$conn = new mysqli($servername,$username,$password,$dbname);
-
-						if($conn->connect_error){
-							die("Connection failed: ".$conn->connect_error);
-						}
-						$sql="Select * from companys where email=\"".$_SESSION['email']."\"";
-						$result = $conn->query($sql);
-						$row=$result->fetch_assoc();
+						$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+						$sql="Select * from companys where email='".$_SESSION['email']."';";
+						$result = pg_query($conn,$sql);
+						$row=pg_fetch_assoc($result);
 						 $_SESSION['name']=$row['name'];
 						echo"  <div class=\"table-responsive table-bordered\" >            
 						<table class=\"table table-hover\">
@@ -145,18 +136,10 @@
 						<h3> Company jobs </h3>
 						<?php
 							
-							$servername="localhost";
-												$username="root";
-												$password="password";
-												$dbname="project";
-												
-							$conn = new mysqli($servername,$username,$password,$dbname);
-							if (!$conn) {
-								die('Could not connect: ' . mysqli_error($conn));
-							}
+							$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-							$sql="SELECT * FROM vacancy WHERE company_name = '".$_SESSION['name']."'";
-							$result = $conn->query($sql);
+							$sql="SELECT * FROM vacancy WHERE company_name ='".$_SESSION['name']."';";
+							$result = pg_query($conn,$sql);
 
 
 
@@ -170,7 +153,7 @@
 											   </tr>
 											   ";
 											   
-										while($row = $result->fetch_assoc()){	   
+										while($row =pg_fetch_assoc($result)){	   
 												echo "<form action=\"deleteVacancy.php\" method=\"POST\">";
 												echo		   "
 											   <tr>
@@ -266,15 +249,10 @@
 					 $password="password";
 					 $dbname="project";
 					 
-					 $conn = new mysqli($servername,$username,$password,$dbname);
-					 
-					 if($conn->connect_error){
-						 die("Connection failed: ".$conn->connect_error);
-						 }
+					 $con = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 						 
-						 
-						$sql="Select * from applications where c_mail='".$_SESSION['email']."'";
-						$result=$conn->query($sql);
+						$sql="Select * from applications where c_mail='".$_SESSION['email']."';";
+						$result=pg_query($conn,$sql);
 						
 			
 					echo  "<div class=\"table-responsive table-bordered\" >            
@@ -289,11 +267,11 @@
 						</thead>
 						<tbody>";
 						
-						while($row=$result->fetch_assoc()){
+						while($row=pg_fetch_assoc($result)){
 							
-						   $sql2="Select * from students where email='".$row['s_mail']."'";
-						   $result2=$conn->query($sql2);
-						   $row2=$result2->fetch_assoc();
+						   $sql2="Select * from students where email='".$row['s_mail']."';";
+						   $result2=pg_query($conn,$sql2);
+						   $row2=pg_fetch_assoc($result2);
 						   echo "<form action=\"updateStatus.php\" method=\"POST\">";
 						   echo "<tr onclick=\"trclick('".$row['s_mail']."','".$row['job_id']."',this)\">";
 						   echo "<td> <input  type=\"number\" name=\"app_id\" value=\"".$row['app_id']."\" readonly maxlength=\"4\" size=\"4\" style=\"width:40px;\"></td>";
@@ -338,39 +316,6 @@
 			
 		</div>
 	</body>
-
-	<footer>
-		<nav class="navbar navbad-default" id="bottom-nav">
-			<div class="container-fluid">
-				<div id="col1" >
-					<ul id="blist1">
-						<li><a href='#'>About Us</a></li>
-						<li><a href='#'>FAQs</a></li>
-						<li><a href='#'>Contact Us</a></li>
-					</ul>
-				</div>
-				
-				<div id="col2" >
-					<ul id="blist1">
-						<li><a href='#'>Privacy Policy</a></li>
-						<li><a href='#'>Legal</a></li>
-						<li><a href='#'>Work With Us</a></li>
-					</ul>
-				</div>
-				
-				<div id="col3" class=" container-fluid">
-				
-					<ul id="blist3" >
-						<li><i class="fa fa-facebook fa-2x" ><a href='#'></a></i></li>
-						<li><i class="fa fa-twitter fa-2x"><a href='#'></a></i></li>
-						<li><i class="fa fa-instagram fa-2x"><a href='#'></a></i></li>
-						<li><i class="fa fa-linkedin fa-2x"><a href='#'></a></i></li>
-					</ul>
-					<ul>
-					<!--<p id="lic">site design / logo (c) Company_Name Inc.<br> licensed under Company_Name inc. </p>-->
-					<li id="blist4">site design / logo (c) Company_Name Inc.<br> licensed under Company_Name inc.</li>
-					</ul>
-				</div>
 			</div>
 		</nav>
 	</footer>

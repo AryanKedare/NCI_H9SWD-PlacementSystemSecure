@@ -11,10 +11,10 @@ $email = $_GET['email'];
 
 $con = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-$sql="SELECT * FROM companys WHERE email='".$_GET['email']."';";
-$result = pg_query($con,$sql);
+$sql = "SELECT * FROM companys WHERE email = $1";
+pg_prepare($con, "fetch_company", $sql);
+$result = pg_execute($con, "fetch_company", [$_GET['email']]);
 $row = pg_fetch_array($result);
-
 
 echo "<img class=\"img-responsive \" src=\"CSS/Image/c1.jpg\" height=\"120px\" width=\"120px\" align=\"center\" style=\"border-radius:50%\"></img>
 			  <div class=\"table-responsive table-bordered\" >            

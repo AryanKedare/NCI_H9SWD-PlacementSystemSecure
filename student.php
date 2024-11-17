@@ -1,52 +1,37 @@
 <?php
-	
-	
-	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
-		
-	if($_SERVER["REQUEST_METHOD"]=="POST"){ 
-		$name=$_POST['name'];
-		$email=$_POST['email'];
-		$dob=$_POST['dob'];
-		$branch=$_POST['branch'];
-		$year=$_POST['year'];
-		$cpi=$_POST['cpi'];
-		$twp=$_POST['12p'];
-		$tenp=$_POST['10p'];
-		$pwd=$_POST['pwd'];
-		$phone=$_POST['phone'];
-		$degree=$_POST['degree'];
-		
-		
-		
-		/*echo $name . "<BR>";
-		echo $email. "<BR>";
-		echo $dob. "<BR>";
-		echo $branch. "<BR>";
-		echo $year. "<BR>";
-		echo $cpi. "<BR>";
-		echo $twp. "<BR>";
-		echo $tenp. "<BR>";
-		echo $pwd. "<BR>";
-		echo $phone. "<BR>";
-		echo $degree. "<BR>";
-		*/
-		
-		
-		$sql="INSERT into students values('$name','$email','$dob','$branch',$year,$cpi,$twp,$tenp,'$pwd',$phone,'$degree');";
-		
-		if(pg_query($conn,$sql)==TRUE){
-			pg_close($GLOBALS['conn']);
-		echo "<SCRIPT type='text/javascript'> //not showing me this
-								alert('Account Created!');
-								window.location.replace(\"index.html\");
-							</SCRIPT>";
-		}else{
-			echo "Error: " . $sql . "<br>" . $conn->error;
-		}
-		
-		
-						
-	}
-	
+session_start();
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $dob = $_POST['dob'];
+    $branch = $_POST['branch'];
+    $year = $_POST['year'];
+    $cpi = $_POST['cpi'];
+    $twp = $_POST['12p'];
+    $tenp = $_POST['10p'];
+    $pwd = $_POST['pwd'];
+    $phone = $_POST['phone'];
+
+    // Prepare the SQL query using placeholders for parameters
+    $sql = "INSERT INTO students (name, email, dob, branch, year, cpi, twp, tenp, pwd, phone, degree) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
+
+    // Prepare the statement
+    if ($stmt = pg_prepare($conn, "insert_student", $sql)) {
+        // Execute the statement with the provided user inputs
+        if (pg_execute($conn, "insert_student", array($name, $email, $dob, $branch, (int)$year, (float)$cpi, (float)$twp, (float)$tenp, $pwd, (int)$phone, $degree))) {
+            pg_close($conn);
+            echo "<SCRIPT type='text/javascript'>
+                    alert('Account Created!');
+                    window.location.replace('index.html');
+                  </SCRIPT>";
+        } else {
+            echo "Error: Could not execute query.";
+        }
+    } else {
+        echo "Error: Could not prepare query.";
+    }
+}
 ?>

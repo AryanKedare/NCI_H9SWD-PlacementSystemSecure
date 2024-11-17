@@ -25,50 +25,40 @@
 		$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 		
 
-		if($_SERVER["REQUEST_METHOD"]=="POST"){
-			$job_title=$_POST['job_title'];
-			$salary=$_POST['salary'];
-			$deadline=$_POST['deadline'];
-			$bond=$_POST['bond'];
-			$year=$_POST['year'];
-			$cpi=$_POST['cpi'];
-			$twp=$_POST['12p'];
-			$tenp=$_POST['10p'];
-			$branch=$_POST['branch'];
-			$age=$_POST['age'];
-			$degree=$_POST['degree'];
-			$location=$_POST['location'];
-			/*echo $name . "<BR>";
-			echo $email. "<BR>";
-			echo $dob. "<BR>";
-			echo $branch. "<BR>";
-			echo $year. "<BR>";
-			echo $cpi. "<BR>";
-			echo $twp. "<BR>";
-			echo $tenp. "<BR>";
-			echo $pwd. "<BR>";
-			echo $phone. "<BR>";
-			echo $degree. "<BR>";*/
-			
-			$name=$_SESSION['name'];
-
-			$sql="INSERT into vacancy(company_name,job_title,salary,location,deadline,bond,age_e,degree_e,cpi_e,year_e,twtp_e,tetp_e) values('$name','$job_title',$salary,'$location','$deadline',$bond,$age,'$degree',$cpi,$year,$twp,$tenp);";
-			if(pg_query($conn,$sql)===TRUE){
-				pg_close($GLOBALS['conn']);
-		echo "<SCRIPT type='text/javascript'> //not showing me this
-								alert('Vacancy Created Succesfully!!');
-								window.location.replace(\"company_dash.php\");
-							</SCRIPT>";
-		}else{
-			echo "Error: " . $sql . "<br>" . pg_close($conn);
-		}
-			
-			/*
-			$GLOBALS['conn']->close();
-			header('Location: company_dash.php ');
-			echo '<script language="javascript">';
-			echo 'alert("Vacancy succesfully created!")';
-			echo '</script>';*/
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+			// Retrieve form data
+			$job_title = $_POST['job_title'];
+			$salary = $_POST['salary'];
+			$deadline = $_POST['deadline'];
+			$bond = $_POST['bond'];
+			$year = $_POST['year'];
+			$cpi = $_POST['cpi'];
+			$twp = $_POST['12p'];
+			$tenp = $_POST['10p'];
+			$branch = $_POST['branch'];
+			$age = $_POST['age'];
+			$degree = $_POST['degree'];
+			$location = $_POST['location'];
+		
+			// Get company name from session
+			$name = $_SESSION['name'];
+		
+			// Prepare the SQL statement with placeholders for the parameters
+			$sql = "INSERT INTO vacancy (company_name, job_title, salary, location, deadline, bond, age_e, degree_e, cpi_e, year_e, twtp_e, tetp_e) 
+					VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
+		
+			// Prepare the query
+			pg_prepare($conn, "insert_vacancy", $sql);
+		
+			// Execute the prepared statement with user inputs as parameters
+			if (pg_execute($conn, "insert_vacancy", [$name, $job_title, (float)$salary, $location, $deadline, (int)$bond, (int)$age, 
+													  $degree, (float)$cpi, (int)$year, (float)$twp, (float)$tenp])) {
+				pg_close($conn);
+				echo "<SCRIPT type='text/javascript'> alert('Vacancy Created Successfully!!'); window.location.replace('company_dash.php'); </SCRIPT>";
+			} else {
+				echo "Error: Could not execute the query.";
+				pg_close($conn);
+			}
 		}
 	  ?>
 	  

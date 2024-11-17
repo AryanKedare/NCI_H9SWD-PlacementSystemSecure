@@ -13,15 +13,14 @@
 	
 	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-	$sql1="SELECT email FROM companys WHERE name = '".$c_name."'";
-	$result1 = pg_query($conn,$sql1);
+	$sql1 = "SELECT email FROM companys WHERE name = $1";
+	$result1 = pg_query_params($conn, $sql1, array($c_name));
 	$row1 = pg_fetch_assoc($result1);
-	$c_mail= $row1['email'];
+	$c_mail = $row1['email'];
 	
+	$sql3 = "SELECT * FROM applications WHERE job_id = $1 AND s_mail = $2";
+	$result3 = pg_query_params($conn, $sql3, array($job_id, $s_mail));
 	
-	//echo $job_id." ".$s_mail." ".$c_mail;
-	$sql3="SELECT * from applications where job_id=".$job_id." AND s_mail='".$s_mail."'";
-	$result3 = pg_query($conn,$sql3);
 	if(pg_num_rows($result3) != 0){
 		echo "<H3> Already Applied!</H3><BR>";
 		$row = pg_fetch_assoc($result3);

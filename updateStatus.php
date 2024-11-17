@@ -9,9 +9,10 @@
         //echo $app_id." ".$status;
 		 
 	
-		 $usql="Update applications set status=".$status." where app_id=".$app_id."";		
-		 $uresult=pg_query($conn,$usql);
-		 pg_close($conn);
+		$usql = "UPDATE applications SET status = $1 WHERE app_id = $2";
+		pg_prepare($conn, "update_application_status", $usql);
+		$uresult = pg_execute($conn, "update_application_status", [$status, $app_id]);
+		pg_close($conn);
 		header('Location: company_dash.php');
 	
 	}

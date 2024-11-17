@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <html>
 	<head>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -118,13 +121,12 @@
 			  <br>
 			  <br>
 			  <?php
-			  	session_start();
 			  $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
  
-					$sql="SELECT * from students where email='".$_SESSION['email']."';";
-					//$sql="SELECT * from students where email='arykedare@gmail.com';";
-					$result = pg_query($conn,$sql);
-					$row=pg_fetch_assoc($result);
+			  $sql = "SELECT * FROM students WHERE email = $1";
+			  pg_prepare($conn, "fetch_student", $sql);
+			  $result = pg_execute($conn, "fetch_student", [$_SESSION['email']]);
+			  $row = pg_fetch_assoc($result);
 					
                echo "<div class=\"table-responsive table-bordered\" >";            
 			   echo	"  <table class=\"table table-hover\">";

@@ -11,8 +11,9 @@
 	
 	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-	$sql1="SELECT * FROM students WHERE email = '".$_GET['email']."';";
-	$result1 = pg_query($conn,$sql1);
+	$sql1 = "SELECT * FROM students WHERE email = $1";
+	pg_prepare($conn, "fetch_student", $sql1);
+	$result1 = pg_execute($conn, "fetch_student", [$_GET['email']]);
 	$row1 = pg_fetch_assoc($result1);
 
 	echo "<img class=\"img-responsive \" src=\"CSS/Image/c1.jpg\" height=\"120px\" width=\"120px\" align=\"center\" style=\"border-radius:50%\"></img>

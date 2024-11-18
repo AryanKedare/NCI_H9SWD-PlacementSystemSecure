@@ -14,6 +14,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $found = $_POST['found'];
     $founder = $_POST['founder'];
 
+    // Hash the password
+    $hashed_password = password_hash($pwd, PASSWORD_DEFAULT);
+
     // Prepare the SQL statement with placeholders ($1, $2, etc.)
     $sql = "INSERT INTO companys (name, email, pwd, phone, location, ceo, cto, hr, worth, found, founder) 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
@@ -22,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     pg_prepare($conn, "insert_company", $sql);
 
     // Execute the prepared statement with user inputs as parameters
-    if(pg_execute($conn, "insert_company", [$name, $email, $pwd, (int)$phone, $location, $ceo, $cto, $hr, (float)$worth, (int)$found, $founder])){
+    if(pg_execute($conn, "insert_company", [$name, $email, $hashed_password, (int)$phone, $location, $ceo, $cto, $hr, (float)$worth, (int)$found, $founder])){
         pg_close($conn);
         echo "<SCRIPT type='text/javascript'>
                 alert('Account Created!');

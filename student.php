@@ -13,6 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tenp = $_POST['10p'];
     $pwd = $_POST['pwd'];
     $phone = $_POST['phone'];
+    $degree = $_POST['degree'];
+    
+    // Hash the password
+    $hashed_password = password_hash($pwd, PASSWORD_DEFAULT);
 
     // Prepare the SQL query using placeholders for parameters
     $sql = "INSERT INTO students (name, email, dob, branch, year, cpi, twp, tenp, pwd, phone, degree) 
@@ -20,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the statement
     if ($stmt = pg_prepare($conn, "insert_student", $sql)) {
-        // Execute the statement with the provided user inputs
-        if (pg_execute($conn, "insert_student", array($name, $email, $dob, $branch, (int)$year, (float)$cpi, (float)$twp, (float)$tenp, $pwd, (int)$phone, $degree))) {
+        // Execute the statement with the provided user inputs, using the hashed password
+        if (pg_execute($conn, "insert_student", array($name, $email, $dob, $branch, (int)$year, (float)$cpi, (float)$twp, (float)$tenp, $hashed_password, (int)$phone, $degree))) {
             pg_close($conn);
             echo "<SCRIPT type='text/javascript'>
                     alert('Account Created!');

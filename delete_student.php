@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         phpAlert("Wrong username entered!");
     } else {
         $row = pg_fetch_assoc($result);
-        if ($row['pwd'] == $pwd) {
+        if (password_verify($pwd, $row["pwd"])) {
             // Prepare and execute the delete queries
             $sql2 = "DELETE FROM students WHERE email = $1";
             $result2 = pg_query_params($conn, $sql2, array($uname));

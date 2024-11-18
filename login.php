@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result && pg_num_rows($result) > 0) {
         $row = pg_fetch_assoc($result);
 
-        if ($row["pwd"] === $pwd) {
+        if (password_verify($pwd, $row["pwd"])) {
             // Set session variables based on user type
             $_SESSION['email'] = $uname;
             $_SESSION['role'] = $row['role'];

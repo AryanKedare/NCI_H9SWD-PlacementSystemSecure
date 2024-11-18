@@ -19,61 +19,52 @@
 			</div>
 		</nav>
 		
-		 <?php
-			  session_start();
+		<?php
+session_start();
 
-					function phpAlert($msg) {
+function phpAlert($msg) {
     echo '<script type="text/javascript">alert("' . $msg . '")</script>';
 }
 
-			$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-				  
-			if($_SERVER["REQUEST_METHOD"]=="POST"){
-					$uname = $_POST['uname'];
-					$sql1="SELECT * from companys where email='".$_POST['uname']."';";
-					$result = pg_query($GLOBALS['conn'],$sql1);
-					if(pg_num_rows($result) == 0){
-					    phpAlert(   "Wrong username entered!"   );
-						//header('Location: student_dash.php');
-
-					}else{
-					$row=pg_fetch_assoc($result);
-							$sql2="Delete from companys where email='".$_POST['uname']."';";
-							$result = pg_query($GLOBALS['conn'],$sql2);
-							//phpAlert("Deleted!");
-							//header('Location: index.html');
-							$sql3="Delete from applications where c_mail='".$_POST['uname']."';";
-							$result3 = pg_query($GLOBALS['conn'],$sql3);
-							
-							$sql5="Select name from companys where email='".$_POST['uname']."';";
-							$result5 = pg_query($GLOBALS['conn'],$sql5);
-							$row5=pg_fetch_assoc($result5);
-							$sql4="Delete from vacancy where company_name='".$row5['name']."'";
-							$result4 = pg_query($GLOBALS['conn'],$sql4);
-							
-							echo "<SCRIPT type='text/javascript'> //not showing me this
-								alert('Deleted');
-								window.location.replace(\"admin_dash.php\");
-							</SCRIPT>";
-						
-					}
-			}
-        //echo $uname . "<BR>";
-        //echo $pwd . "<BR>";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $uname = $_POST['uname'];
     
-				 
-           pg_close($conn);
-          ?>
-		
-	</head>
-	<body>
+    // Prepare and execute the first query
+    $sql1 = "SELECT * FROM companys WHERE email = $1";
+    $result = pg_query_params($conn, $sql1, array($uname));
+    
+    if (pg_num_rows($result) == 0) {
+        phpAlert("Wrong username entered!");
+    } else {
+        // Prepare and execute the delete queries
+        $sql2 = "DELETE FROM companys WHERE email = $1";
+        $result2 = pg_query_params($conn, $sql2, array($uname));
+        
+        $sql3 = "DELETE FROM applications WHERE c_mail = $1";
+        $result3 = pg_query_params($conn, $sql3, array($uname));
+        
+        // Get the company name
+        $sql5 = "SELECT name FROM companys WHERE email = $1";
+        $result5 = pg_query_params($conn, $sql5, array($uname));
+        $row5 = pg_fetch_assoc($result5);
+        
+        if ($row5) {
+            $sql4 = "DELETE FROM vacancy WHERE company_name = $1";
+            $result4 = pg_query_params($conn, $sql4, array($row5['name']));
+        }
+        
+        echo "<SCRIPT type='text/javascript'>
+            alert('Deleted');
+            window.location.replace(\"admin_dash.php\");
+        </SCRIPT>";
+    }
+}
 
-		
-		<div class="well text-center" id="main">
-  			<img class="img-responsive " src="Images/bye.png" height="200" width="700">
-  		</div>
-		
+pg_close($conn);
+?>		
+	</head>
 	<div class="well container-fluid text-center" id="frm1">
 		<form action="" method="POST">
 			<div>

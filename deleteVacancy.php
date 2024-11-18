@@ -4,12 +4,7 @@ $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres passwo
 
 	if($_SERVER["REQUEST_METHOD"]=="POST"){
         $job_id = $_POST['job_id'];
-		
-        //echo $app_id." ".$status;
-		 
-	
-		 $usql="Delete from vacancy where job_id='".$_POST['job_id']."';";
-		 
+		$usql="Delete from vacancy where job_id='".$_POST['job_id']."';"; 
 		 $uresult=pg_query($conn,$usql);
 		 pg_close($conn);
 		 

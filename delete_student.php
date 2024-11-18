@@ -19,58 +19,50 @@
 			</div>
 		</nav>
 		
-		 <?php
-			  session_start();
-					function phpAlert($msg) {
+		<?php
+session_start();
+
+function phpAlert($msg) {
     echo '<script type="text/javascript">alert("' . $msg . '")</script>';
 }
 
 $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
-			if($_SERVER["REQUEST_METHOD"]=="POST"){
-					$uname = $_POST['uname'];
-					$pwd = $_POST['pwd'];
-					$sql1="SELECT pwd from students where email='".$_POST['uname']."';";
-					$result = pg_query($GLOBALS['conn'],$sql1);
-					if(pg_num_rows($result) == 0){
-					    phpAlert(   "Wrong username entered!"   );
-						//header('Location: student_dash.php');
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $uname = $_POST['uname'];
+    $pwd = $_POST['pwd'];
 
-					}else{
-					$row=pg_fetch_assoc($result);
-						if($row['pwd']==$pwd){
-							$sql2="Delete from students where email='".$_POST['uname']."';";
-							$result = pg_query($GLOBALS['conn'],$sql2);
-							//phpAlert("Deleted!");
-							//header('Location: index.html');
-							$sql3="Delete from applications where s_mail='".$_POST['uname']."';";
-							$result3 = pg_query($GLOBALS['conn'],$sql3);
-							
-							echo "<SCRIPT type='text/javascript'> //not showing me this
-								alert('Deleted');
-								window.location.replace(\"index.html\");
-							</SCRIPT>";
-						}else{
-							phpAlert(   "Wrong password!"   );
-							
-						}
-					}
-			}
-        //echo $uname . "<BR>";
-        //echo $pwd . "<BR>";
-    
-				 
-           pg_close($conn);
-          ?>
+    // Prepare and execute the first query
+    $sql1 = "SELECT pwd FROM students WHERE email = $1";
+    $result = pg_query_params($conn, $sql1, array($uname));
+
+    if (pg_num_rows($result) == 0) {
+        phpAlert("Wrong username entered!");
+    } else {
+        $row = pg_fetch_assoc($result);
+        if ($row['pwd'] == $pwd) {
+            // Prepare and execute the delete queries
+            $sql2 = "DELETE FROM students WHERE email = $1";
+            $result2 = pg_query_params($conn, $sql2, array($uname));
+
+            $sql3 = "DELETE FROM applications WHERE s_mail = $1";
+            $result3 = pg_query_params($conn, $sql3, array($uname));
+
+            echo "<SCRIPT type='text/javascript'>
+                alert('Deleted');
+                window.location.replace(\"index.html\");
+            </SCRIPT>";
+        } else {
+            phpAlert("Wrong password!");
+        }
+    }
+}
+
+pg_close($conn);
+?>
 		
 	</head>
 	<body>
-
-		
-		<div class="well text-center" id="main">
-  			<img class="img-responsive " src="Images/bye.png" height="200" width="700">
-  		</div>
-		
 	<div class="well container-fluid text-center" id="frm1">
 		<form action="" method="POST">
 			<div>

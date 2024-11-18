@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS companys
 (
     name text COLLATE pg_catalog."default",
     email character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    pwd character varying(20) COLLATE pg_catalog."default",
+    pwd character varying(225) COLLATE pg_catalog."default",
     phone bigint,
     location text COLLATE pg_catalog."default",
     ceo text COLLATE pg_catalog."default",
@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS companys
     worth integer,
     found integer,
     founder text COLLATE pg_catalog."default",
-    CONSTRAINT companys_pkey PRIMARY KEY (email)
+    CONSTRAINT companys_pkey PRIMARY KEY (email),
+	role text DEFAULT 'company'
 );
 
 CREATE TABLE IF NOT EXISTS students
@@ -58,16 +59,18 @@ CREATE TABLE IF NOT EXISTS students
     cpi integer,
     twp integer,
     tenp integer,
-    pwd text COLLATE pg_catalog."default",
+    pwd character varying(225) COLLATE pg_catalog."default",
     phone bigint,
     degree text COLLATE pg_catalog."default",
-    CONSTRAINT students_pkey PRIMARY KEY (email)
+    CONSTRAINT students_pkey PRIMARY KEY (email),
+    role text DEFAULT 'student'
 );
 
 CREATE TABLE IF NOT EXISTS admins
 (
     name text COLLATE pg_catalog."default",
-    pwd text COLLATE pg_catalog."default"
+    pwd text COLLATE pg_catalog."default",
+    role text DEFAULT 'admin'
 );
 
-INSERT INTO admins values('admin@tpc.com', 'admin123');
+INSERT INTO admins values('admin@tpc.com', 'admin123','admin');

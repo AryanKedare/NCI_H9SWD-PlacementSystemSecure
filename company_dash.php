@@ -318,5 +318,4 @@
 	</body>
 			</div>
 		</nav>
-	</footer>
 </html>

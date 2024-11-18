@@ -1,105 +1,51 @@
-#top-nav{
-		background : #0B0B3B;	
+body {
+	font-family: 'Nova Square', sans-serif;
+	padding-top: 70px;
+}
+.navbar-brand {
+	font-size: 24px;
+}
+#main {
+	background-color: #f8f8f8;
+	padding: 20px;
+	margin-bottom: 30px;
 }
 
-#bottom-nav{
-		background : #0B0B3B;	
-		bottom: -20;
-		/*position: fixed;*/
-		overflow: hidden;
-		width: 100%;
+#main h1 {
+	margin-bottom: 20px;
 }
-
-#col1{
-	/*background: red;*/
-	width :400px;
-	height: 100px;
-	float : left;
-	margin: 50px;
-	 display: table-cell;
-}
-
-#col2{
-	/*background: green;*/
-	width :400px;
-	height: 100px;
-	float : left;
-	margin : 50px;
-	 display: table-cell;
-}
-
-#col3{
-	/*background: blue;*/
-	width :220px;
-	height: 100px;
-	float : right;
-	margin : 10px;
-	 display: table-cell;
-}
-	
-#blist1{
-	list-style-type:none;
-	margin-top: 15px;
-}
-
- #blist3 li{
-	display : inline;
-	size: 100px;
-	padding: 6px;
-	cursor : pointer;
-	color:white;
-}
-#blist4 {
-	color:white;
-
-}
-
-#lic{
-	position: fixed;
-	bottom: 50px;
-	margin:10px;
-	color:white;
-}	
-	
-a{
-	color: white;	
-}
-
-
-body{
-	background: #557399;
-	/*margin-top:40px;
-  //margin-left:20px;
-  //margin-right:20px;*/
-  margin-bottom:40px;
-  padding-top:50px;
-}
-
-#frm1{
-	background: #AED5F9;
-	margin-right:500px;
-	margin-left:750px;
-   height:auto;
-   top: 800px;
-   width: 300px;
-   
-}
-
-#main{
-	margin-top: 50px;
-	margin-right: 200px;
-	margin-left: 200px;
-  	Background-color: #AED5F9;
-}
-
-#dash{
-
-	margin: 50px;
-}
-.row .well{
-	border: black solid;
-}
-img{
+#frm1 {
+	max-width: 400px;
 	margin: 0 auto;
+	padding: 20px;
+	background-color: #f8f8f8;
+	border-radius: 5px;
 }
-
+#frm1 input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+#frm1 button {
+	width: 100%;
+	padding: 10px;
+	background-color: #337ab7;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+#frm1 button:hover {
+	background-color: #286090;
+}
+.psw {
+	display: block;
+	margin-top: 10px;
+}
+footer {
+	margin-top: 30px;
+	background-color: #f8f8f8;
+	padding: 10px 0;
+}

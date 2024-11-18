@@ -5,26 +5,19 @@ $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres passwo
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = $_POST['uname'];
     $pwd = $_POST['pwd'];
-    $type = $_POST['type'];
 
     function phpAlert($msg) {
         echo '<script type="text/javascript">alert("' . $msg . '")</script>';
     }
 
     // Prepare the SQL query based on the user type
-    if ($type === "Student") {
-        $sql = "SELECT pwd FROM students WHERE email = $1";
-    } elseif ($type === "Company") {
-        $sql = "SELECT pwd FROM companys WHERE email = $1";
-    } elseif ($type === "Admin") {
-        $sql = "SELECT pwd FROM admins WHERE email = $1";
-    } else {
-        echo "<SCRIPT type='text/javascript'>
-                alert('Wrong username or password to continue as admin');
-                window.location.replace(\"index.html\");
-              </SCRIPT>";
-        exit();
-    }
+    $sql = "
+        SELECT 'student' AS role, pwd FROM students WHERE email = $1
+        UNION ALL
+        SELECT 'company' AS role, pwd FROM companys WHERE email = $1
+        UNION ALL
+        SELECT 'admin' AS role, pwd FROM admins WHERE email = $1
+    ";
 
     // Prepare and execute the query using parameterized queries
     $result = pg_prepare($conn, "login_query", $sql);
@@ -32,16 +25,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result && pg_num_rows($result) > 0) {
         $row = pg_fetch_assoc($result);
+
         if ($row["pwd"] === $pwd) {
             // Set session variables based on user type
             $_SESSION['email'] = $uname;
-            if ($type === "Student") {
+            $_SESSION['role'] = $row['role'];
+
+            if ($row['role'] === "student") {
                 header('Location: student_dash.php');
                 exit();
-            } elseif ($type === "Company") {
+            } elseif ($row['role'] === "company") {
                 header('Location: company_dash.php');
                 exit();
-            } elseif ($type === "Admin") {
+            } elseif ($row['role'] === "admin") {
                 header('Location: admin_dash.php');
                 exit();
             }

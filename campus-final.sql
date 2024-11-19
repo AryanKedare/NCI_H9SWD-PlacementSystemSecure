@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS vacancy
     bond integer,
     age_e integer,
     degree_e text COLLATE pg_catalog."default",
-    cpi_e integer,
+    cpi_e float,
     year_e integer,
-    twtp_e integer,
-    tetp_e integer,
+    twtp_e float,
+    tetp_e float,
     CONSTRAINT vacancy_pkey PRIMARY KEY (job_id)
 );
 
@@ -56,9 +56,9 @@ CREATE TABLE IF NOT EXISTS students
     dob date,
     branch text COLLATE pg_catalog."default",
     year integer,
-    cpi integer,
-    twp integer,
-    tenp integer,
+    cpi float,
+    twp float,
+    tenp float,
     pwd character varying(225) COLLATE pg_catalog."default",
     phone bigint,
     degree text COLLATE pg_catalog."default",
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS students
 
 CREATE TABLE IF NOT EXISTS admins
 (
-    name text COLLATE pg_catalog."default",
-    pwd text COLLATE pg_catalog."default",
+    email character varying COLLATE pg_catalog."default",
+    pwd character varying(225) COLLATE pg_catalog."default",
     role text DEFAULT 'admin'
 );
 

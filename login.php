@@ -1,5 +1,10 @@
 <?php
+// Start session with secure parameters
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_secure', 1);
 session_start();
+
 $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -27,10 +32,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = pg_fetch_assoc($result);
 
         if (password_verify($pwd, $row["pwd"])) {
+            // Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+
             // Set session variables based on user type
             $_SESSION['email'] = $uname;
             $_SESSION['role'] = $row['role'];
 
+            // Set a secure cookie
+            $cookie_options = array(
+                'expires' => time() + 3600,  // 1 hour expiration
+                'path' => '/',
+                'domain' => $_SERVER['HTTP_HOST'],
+                'secure' => true,     // Only transmit over HTTPS
+                'httponly' => true,   // Not accessible to JavaScript
+                'samesite' => 'Strict' // Strict same-site policy
+            );
+            setcookie('user_session', hash('sha256', $uname . $_SERVER['REMOTE_ADDR']), $cookie_options);
+
+            // Redirect based on user role
             if ($row['role'] === "student") {
                 header('Location: student_dash.php');
                 exit();
@@ -42,16 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
         } else {
-            echo "<SCRIPT type='text/javascript'>
-                    alert('Invalid username or password');
-                    window.location.replace(\"index.html\");
-                  </SCRIPT>";
+            phpAlert('Invalid username or password');
+            echo "<script>window.location.replace('index.html');</script>";
         }
     } else {
-        echo "<SCRIPT type='text/javascript'>
-                alert('User does not exist!');
-                window.location.replace(\"index.html\");
-              </SCRIPT>";
+        phpAlert('User does not exist!');
+        echo "<script>window.location.replace('index.html');</script>";
     }
 }
 

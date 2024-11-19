@@ -20,22 +20,22 @@
 	  <body>
 		<div class=" container-fluid " id="dash" >
 		<h2>STUDENT REGISTRATION</h2>
-		<form action="student.php" method="POST" enctype="multipart/form-data">
-        <div class="container">
+		<form id="studentregistrationForm" action="student.php" method="POST" enctype="multipart/form-data" onsubmit="return validatestudentForm()">       
+	<div class="container">
 		   <h3>Personal Details</h3>
            <hr>
            <ol>
            <li><label for="name"><b>Name:</b></label>
-           <input type="text" placeholder="Enter in capital letters" name="name" required></li>
+           <input type="text" placeholder="Enter in Full Name" name="name" id="name" required></li>
 		   
 		   <li><label for="email"><b>Email(Username):</b></label>
-           <input type="email" placeholder="abc@xyz.com" name="email" required></li>
+           <input type="email" placeholder="abc@xyz.com" name="email" id="email" required></li>
 		   
 		   <li><label for="dob"><b>Date of birth:</b></label>
-           <input type="date" name="dob" required></li>
+           <input type="date" name="dob" id="dob" required></li>
 
            <li><label for="branch"><b>Branch:</b></label>
-	      <select name="branch" placeholder="Select">
+	      <select name="branch" id="branch" placeholder="Select">
           <option label="cse">CSE</option>
           <option label="it">IT</option>
           <option label="ece">ECE</option>
@@ -45,25 +45,25 @@
 	      </select></li>
 
           <li><label for="year"><b>Year of passing out:</b></label>
-          <input type="number" placeholder="Ex. 2019" name="year" required> </li>
+          <input type="number" placeholder="Ex. 2024" name="year" id="year" required> </li>
 	
 	      <li><label for="cpi"><b>CPI            :</b></label>
-          <input type="decimal" placeholder="Out of 10" name="cpi" required max="10" min="0"></li>
+          <input type="decimal" placeholder="Out of 10" name="cpi" id="cpi" required max="10" min="0"></li>
 	
           <li><label for="12p"><b>12th Percentage:</b></label>
-          <input type="decimal" placeholder="Ex.85.5" name="12p" required min="0" max="100"></li>
+          <input type="decimal" placeholder="Ex.85.5" name="12p" id="12p" required min="0" max="100"></li>
 	
 	      <li><label for="10p"><b>10th Percentage:</b></label>
-          <input type="decimal" placeholder="Ex.85.5" name="10p" required min="0" max="100"></li>
+          <input type="decimal" placeholder="Ex.85.5" name="10p" id="10p" required min="0" max="100"></li>
 		  
 		  <li><label for="pwd"><b>Password:</b></label>
-          <input type="password" placeholder="minimum 6 characters" name="pwd" required></li>
+          <input type="password" placeholder="minimum 6 characters" name="pwd" id="pwd" required></li>
 		  
 		  <li><label for="phone"><b>Contact number:</b></label>
-          <input type="number" placeholder="" name="phone" required> </li>
+          <input type="number" placeholder="" name="phone" id="phone" required> </li>
 		  
 		  <li><label for="degree"><b>Course:</b></label>
-	      <select name="degree" placeholder="Select">
+	      <select name="degree" id="degree" placeholder="Select">
           <option label="btech">B.Tech</option>
 		  <option label="btech">M.Tech</option>
 		  <option label="be">B.E</option>
@@ -87,5 +87,6 @@
   </div>
 
 	</div>
+	<script src="js/password_validation.js"></script>
 	</body>
 </html>

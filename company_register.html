@@ -19,43 +19,43 @@
 	  <body>
 		<div class=" container-fluid " id="dash" >
 		<h2>COMPANY REGISTRATION</h2>
-		<form action="company.php" method="POST">
+		<form id="companyRegistrationForm" form action="company.php" method="POST" onsubmit="return validatecompanyForm()">
         <div class="container">
 		   <h3>Company Details</h3>
            <hr>
            <ol>
            <li><label for="name"><b>Name:</b></label>
-           <input type="text" placeholder="Enter in capital letters" name="name" required></li>
+           <input type="text" id="name" placeholder="Enter in capital letters" name="name" required></li>
 		   
 		   <li><label for="email"><b>Email(Username):</b></label>
-           <input type="email" placeholder="abc@xyz.com" name="email" required></li>
+           <input type="email" id="email" placeholder="abc@xyz.com" name="email" required></li>
 		   
 		   <li><label for="pwd"><b>Password:</b></label>
-           <input type="password" name="pwd" placeholder="minimum 6 characters" required></li>
+           <input type="password" id="pwd" name="pwd" placeholder="minimum 6 characters" required></li>
 
            <li><label for="phone"><b>Contact number:</b></label>
-           <input type="number" placeholder="10 digits" name="phone" required ></li>
+           <input type="number" id="phone" placeholder="10 digits" name="phone" required ></li>
 
           <li><label for="location"><b>Location:</b></label>
-          <input type="text" placeholder="Ex. Delhi" name="location" required ></li>
+          <input type="text" id="location" id="location" placeholder="Ex. Delhi" name="location" required ></li>
 	
 	      <li><label for="ceo"><b>C.E.O.:</b></label>
-          <input type="text" placeholder=" " name="ceo" required ></li>
+          <input type="text" id="ceo" placeholder=" " name="ceo" required ></li>
 	
           <li><label for="cto"><b>C.T.O.:</b></label>
-          <input type="text" placeholder=" " name="cto" required ></li>
+          <input type="text" id="cto" placeholder=" " name="cto" required ></li>
 	
 	     <li><label for="hr"><b>HR:</b></label>
-          <input type="text" placeholder=" " name="hr" required ></li>
+          <input type="text" id="hr" placeholder=" " name="hr" required ></li>
 		  
 		  <li><label for="worth"><b>Net Worth:</b></label>
-           <input type="number" placeholder="in crores" name="worth" required ></li>
+           <input type="number" id="worth" placeholder="in crores" name="worth" required ></li>
 		  
 		  <li><label for="found"><b>Founded on:</b></label>
-          <input type="text" placeholder=" " name="found" required ></li>
+          <input type="text" id="found" placeholder=" " name="found" required ></li>
 		  
 		  <li><label for="founder"><b>Founder:</b></label>
-          <input type="text" placeholder=" " name="founder" required ></li>
+          <input type="text" id="founder" placeholder=" " name="founder" required ></li>
 		 
 		  </ol>
           <hr>
@@ -69,5 +69,6 @@
   </div>
 
 </div>
+<script src="js/password_validation.js"></script>
 	</body>
 </html>

@@ -30,8 +30,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result && pg_num_rows($result) > 0) {
         $row = pg_fetch_assoc($result);
+        $passwordCorrect = false;
 
-        if (password_verify($pwd, $row["pwd"])) {
+        if ($row['role'] === 'admin') {
+            // For admin, compare passwords directly without hashing
+            $passwordCorrect = ($pwd === $row["pwd"]);
+        } else {
+            // For students and companies, use password_verify
+            $passwordCorrect = password_verify($pwd, $row["pwd"]);
+        }
+
+        if ($passwordCorrect) {
             // Regenerate session ID to prevent session fixation
             session_regenerate_id(true);
 

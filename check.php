@@ -10,7 +10,7 @@
 	$job_id= $_GET['job_id'];
 	$s_mail= $_GET['s_mail'];
 	
-	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+	include("conn.php");
 
 
 	$sql1="SELECT * FROM students WHERE email = '".$s_mail."'";

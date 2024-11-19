@@ -2,7 +2,7 @@
 session_start();
 $email = $_SESSION['email'] ?? '';
 $name = $_SESSION['name'] ?? '';
-$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+include("conn.php");
 ?>
 
 <!DOCTYPE html>

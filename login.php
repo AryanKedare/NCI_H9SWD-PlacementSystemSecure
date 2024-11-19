@@ -5,7 +5,7 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.cookie_secure', 1);
 session_start();
 
-$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+include("conn.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = $_POST['uname'];

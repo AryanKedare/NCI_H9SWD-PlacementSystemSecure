@@ -9,7 +9,7 @@
 	
 	$email= $_GET['email'];
 	
-	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+	include("conn.php");
 
 	$sql1 = "SELECT * FROM students WHERE email = $1";
 	pg_prepare($conn, "fetch_student", $sql1);

@@ -8,7 +8,7 @@
 <?php
 session_start();
 $sql = "SELECT * FROM vacancy WHERE job_id = $1";
-$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+include("conn.php");
 pg_prepare($conn, "fetch_vacancy", $sql);
 $result = pg_execute($conn, "fetch_vacancy", [$_GET['job_id']]);
 $row = pg_fetch_array($result);

@@ -86,7 +86,7 @@
 					<br>
 					<?php
 						session_start();
-						$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+						include("conn.php");
 						$sql="Select * from companys where email='".$_SESSION['email']."';";
 						$result = pg_query($conn,$sql);
 						$row=pg_fetch_assoc($result);
@@ -136,7 +136,7 @@
 						<h3> Company jobs </h3>
 						<?php
 							
-							$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+							include("conn.php");
 
 							$sql="SELECT * FROM vacancy WHERE company_name ='".$_SESSION['name']."';";
 							$result = pg_query($conn,$sql);
@@ -249,7 +249,7 @@
 					 $password="password";
 					 $dbname="project";
 					 
-					 $con = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+					 include("conn.php");
 						 
 						$sql="Select * from applications where c_mail='".$_SESSION['email']."';";
 						$result=pg_query($conn,$sql);

@@ -9,7 +9,7 @@
 session_start();
 $name = $_GET['name'] ?? '';
 
-$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+include("conn.php");
 
 // Prepare the SQL statements outside the loop
 $sql = "SELECT * FROM vacancy WHERE company_name = $1";

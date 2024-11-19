@@ -121,7 +121,8 @@
 			  <br>
 			  <br>
 			  <?php
-			  $conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+				include("conn.php");
+
  
 			  $sql = "SELECT * FROM students WHERE email = $1";
 			  pg_prepare($conn, "fetch_student", $sql);
@@ -266,7 +267,7 @@
 				
 				<?php
 				
-				$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+				include("conn.php");
 
 					$sql="Select name,email from companys";
 					$result = pg_query($conn,$sql);

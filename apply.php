@@ -11,7 +11,7 @@
 	$s_mail= $_GET['s_mail'];
 	$c_name= $_GET['c_name'];
 	
-	$conn = pg_connect("host=localhost port=5432 dbname=project user=postgres password=123") or die("Connection Failed");
+	include("conn.php");
 
 	$sql1 = "SELECT email FROM companys WHERE name = $1";
 	$result1 = pg_query_params($conn, $sql1, array($c_name));

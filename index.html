@@ -46,6 +46,7 @@
                 <input type="password" placeholder="Enter Password" name="pwd" id="pswrd" required>
             </div>
             <div>
+                <input type="hidden" id="csrf_token" name="csrf_token" value="">
                 <button type="submit">Login</button>
                 <br>
                 <span class="psw" onclick="fun()"><a href="#">Forgot password?</a></span>
@@ -56,5 +57,6 @@
             </div>
         </form>
     </div>
+    <script src="js/csrf.js"></script>
 </body>
 </html>

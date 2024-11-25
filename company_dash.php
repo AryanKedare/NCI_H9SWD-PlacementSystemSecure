@@ -17,6 +17,7 @@
 					<li class="active"><a href="index.html">Home</a></li>
 					<li class="active"><a href="index.html">Logout</a></li>
 					<li class="active"><a href="delete_company.php">Delete Account</a></li>
+					<li class="active"><a href="mfa.php">Setup MFA</a></li>
 				</ul>
 			</div>
 		</nav>

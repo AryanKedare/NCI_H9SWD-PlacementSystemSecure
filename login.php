@@ -6,10 +6,15 @@ ini_set('session.cookie_secure', 1);
 session_start();
 
 include("conn.php");
+require_once 'C:/Users/aryan/vendor/autoload.php';
+use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = $_POST['uname'];
     $pwd = $_POST['pwd'];
+    $mfa_code = isset($_POST['mfa_code']) ? $_POST['mfa_code'] : null;
 
     function phpAlert($msg) {
         echo '<script type="text/javascript">alert("' . $msg . '")</script>';
@@ -17,15 +22,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the SQL query based on the user type
     $sql = "
-        SELECT 'student' AS role, pwd FROM students WHERE email = $1
+        SELECT 'student' AS role, pwd, mfa_secret  FROM students WHERE email = $1
         UNION ALL
-        SELECT 'company' AS role, pwd FROM companys WHERE email = $1
+        SELECT 'company' AS role, pwd, mfa_secret  FROM companys WHERE email = $1
         UNION ALL
-        SELECT 'admin' AS role, pwd FROM admins WHERE email = $1
+        SELECT 'admin' AS role, pwd, mfa_secret  FROM admins WHERE email = $1
     ";
 
     // Prepare and execute the query using parameterized queries
     $result = pg_prepare($conn, "login_query", $sql);
+    if (!$result) {
+        echo "Query failed: " . pg_last_error($conn);
+        exit;
+    }
     $result = pg_execute($conn, "login_query", array($uname));
 
     if ($result && pg_num_rows($result) > 0) {
@@ -41,6 +50,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($passwordCorrect) {
+            
+            // Check if MFA is set up
+            if (!empty($row['mfa_secret'])) {
+                // Verify MFA code
+                $tfa = new TwoFactorAuth(new BaconQrCodeProvider(), 'MyApp');
+                if ($mfa_code === null) {
+                    // Show MFA input form
+                    echo '<form method="post">
+                        <input type="hidden" name="uname" value="' . htmlspecialchars($uname) . '">
+                        <input type="hidden" name="pwd" value="' . htmlspecialchars($pwd) . '">
+                        <input type="text" name="mfa_code" placeholder="Enter MFA Code" required>
+                        <input type="submit" value="Verify">
+                    </form>';
+                    exit();
+                } elseif (!$tfa->verifyCode($row['mfa_secret'], $mfa_code)) {
+                    phpAlert('Invalid MFA code');
+                    echo "<script>window.location.replace('index.html');</script>";
+                    exit();
+                }
+            }
+            // MFA verified or not set up, proceed with login
             // Regenerate session ID to prevent session fixation
             session_regenerate_id(true);
 

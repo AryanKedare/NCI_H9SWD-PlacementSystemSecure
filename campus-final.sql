@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS companys
     found integer,
     founder text COLLATE pg_catalog."default",
     CONSTRAINT companys_pkey PRIMARY KEY (email),
+    mfa_secret character varying(225),
 	role text DEFAULT 'company'
 );
 
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS students
     phone bigint,
     degree text COLLATE pg_catalog."default",
     CONSTRAINT students_pkey PRIMARY KEY (email),
+    mfa_secret character varying(225),
     role text DEFAULT 'student'
 );
 
@@ -70,6 +72,7 @@ CREATE TABLE IF NOT EXISTS admins
 (
     email character varying COLLATE pg_catalog."default",
     pwd character varying(225) COLLATE pg_catalog."default",
+    mfa_secret character varying(225),
     role text DEFAULT 'admin'
 );
 

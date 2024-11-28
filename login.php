@@ -17,11 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the SQL query based on the user type
     $sql = "
-        SELECT 'student' AS role, pwd FROM students WHERE email = $1
+        SELECT 'student' AS role, pwd, mfa_secret FROM students WHERE email = $1
         UNION ALL
-        SELECT 'company' AS role, pwd FROM companys WHERE email = $1
+        SELECT 'company' AS role, pwd, mfa_secret FROM companys WHERE email = $1
         UNION ALL
-        SELECT 'admin' AS role, pwd FROM admins WHERE email = $1
+        SELECT 'admin' AS role, pwd, mfa_secret FROM admins WHERE email = $1
     ";
 
     // Prepare and execute the query using parameterized queries

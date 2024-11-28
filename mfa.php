@@ -5,10 +5,12 @@ include("conn.php");
 use RobThree\Auth\TwoFactorAuth;
 use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 use RobThree\Auth\Algorithm;
+
 if (!isset($_SESSION['email']) || !isset($_SESSION['role'])) {
     header('Location: index.html');
     exit();
 }
+
 $tfa = new TwoFactorAuth(
     new BaconQrCodeProvider(),
     'CAII',
@@ -16,30 +18,39 @@ $tfa = new TwoFactorAuth(
     30,
     Algorithm::Sha1
 );
-if (!isset($_SESSION['mfa_secret'])) {
+
+if (!isset($_SESSION['mfa_secret']) || empty($_SESSION['mfa_secret'])) {
     $_SESSION['mfa_secret'] = $tfa->createSecret();
 }
+
 $secret = $_SESSION['mfa_secret'];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_code = $_POST['mfa_code'];
-    if ($tfa->verifyCode($_SESSION['mfa_secret'], $user_code)) {
-        // Code is correct, save the secret to the database
+    if ($tfa->verifyCode($secret, $user_code)) {
         $table = ($_SESSION['role'] == 'student') ? 'students' : (($_SESSION['role'] == 'company') ? 'companys' : 'admins');
         $sql = "UPDATE $table SET mfa_secret = $1 WHERE email = $2";
-        $result = pg_query_params($conn, $sql, array($_SESSION['mfa_secret'], $_SESSION['email']));
+        $result = pg_query_params($conn, $sql, array($secret, $_SESSION['email']));
         
         if ($result) {
-            echo "MFA set up successfully!";
-            unset($_SESSION['mfa_secret']); // Clear the secret from session after successful setup
+            unset($_SESSION['mfa_secret']);
+            session_destroy(); // Destroy the session to force re-login
+            echo "<script>
+                alert('MFA set up successfully! Please login again.');
+                window.location.href = 'index.html';
+            </script>";
+            exit();
         } else {
-            echo "Error setting up MFA.";
+            echo "<script>alert('Error setting up MFA. Please try again.');</script>";
         }
     } else {
-        echo "Invalid code. Please try again.";
+        echo "<script>alert('Invalid code. Please try again.');</script>";
     }
 }
-$qrCodeUrl = $tfa->getQRCodeImageAsDataUri('CAII:' . $_SESSION['email'], $_SESSION['mfa_secret']);
+
+$qrCodeUrl = $tfa->getQRCodeImageAsDataUri('CAII:' . $_SESSION['email'], $secret);
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>

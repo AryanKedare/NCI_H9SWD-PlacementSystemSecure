@@ -6,10 +6,14 @@ ini_set('session.cookie_secure', 1);
 session_start();
 
 include("conn.php");
+require_once 'C:/Users/aryan/vendor/autoload.php';
+use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\Providers\Qr\BaconQrCodeProvider;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $uname = $_POST['uname'];
     $pwd = $_POST['pwd'];
+    $mfa_code = isset($_POST['mfa_code']) ? $_POST['mfa_code'] : null;
 
     function phpAlert($msg) {
         echo '<script type="text/javascript">alert("' . $msg . '")</script>';
@@ -41,6 +45,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($passwordCorrect) {
+                        // Check if MFA is set up
+            if (!empty($row['mfa_secret'])) {
+                // Verify MFA code
+                $tfa = new TwoFactorAuth(new BaconQrCodeProvider(), 'CAII');
+                if ($mfa_code === null) {
+                    // Show MFA input form
+                    echo '<form method="post">
+                        <input type="hidden" name="uname" value="' . $uname . '">
+                        <input type="hidden" name="pwd" value="' . $pwd . '">
+                        <input type="text" name="mfa_code" placeholder="Enter MFA Code" required>
+                        <input type="submit" value="Verify">
+                    </form>';
+                    exit();
+                } elseif (!$tfa->verifyCode($row['mfa_secret'], $mfa_code)) {
+                    phpAlert('Invalid MFA code');
+                    echo "<script>window.location.replace('index.html');</script>";
+                    exit();
+                }
+            }
             // Regenerate session ID to prevent session fixation
             session_regenerate_id(true);
 

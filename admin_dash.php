@@ -25,6 +25,7 @@ include("conn.php");
                 <li class="active"><a href="index.html">Home</a></li>
                 <li><a href="delete_student_a.php">Delete Student</a></li>
                 <li><a href="delete_company_a.php">Delete Company</a></li>
+                <li class="active"><a href="mfa.php">Setup MFA</a></li>
                 <li><a href="index.html">Logout</a></li>
             </ul>
         </div>
@@ -62,8 +63,7 @@ include("conn.php");
          }  else {
             echo "0 results";
                }
-				  }
-				  
+            }
 				  if(isset($_POST['query']) && $_POST['query']=="total_vacancies") {
                      
                	 $sql = "SELECT * FROM vacancy";

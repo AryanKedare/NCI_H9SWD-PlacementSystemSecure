@@ -76,4 +76,4 @@ CREATE TABLE IF NOT EXISTS admins
     role text DEFAULT 'admin'
 );
 
-INSERT INTO admins values('admin@tpc.com', 'admin123','admin');
+INSERT INTO admins values('admin@tpc.com', 'admin123');
